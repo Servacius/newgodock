@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/Servacius/newgodock/api/responses"
+	"github.com/servacius/newgodock/api/responses"
 )
 
 func (server *Server) Home(w http.ResponseWriter, r *http.Request) {
