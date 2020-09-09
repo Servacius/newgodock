@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/Servacius/newgodock/api/auth"
-	"github.com/Servacius/newgodock/api/responses"
+	"github.com/servacius/newgodock/api/auth"
+	"github.com/servacius/newgodock/api/responses"
 )
 
 func SetMiddlewareJSON(next http.HandlerFunc) http.HandlerFunc {

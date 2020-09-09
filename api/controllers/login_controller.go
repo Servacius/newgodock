@@ -5,10 +5,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/Servacius/newgodock/api/auth"
-	"github.com/Servacius/newgodock/api/models"
-	"github.com/Servacius/newgodock/api/responses"
-	"github.com/Servacius/newgodock/api/utils/formaterror"
+	"github.com/servacius/newgodock/api/auth"
+	"github.com/servacius/newgodock/api/models"
+	"github.com/servacius/newgodock/api/responses"
+	"github.com/servacius/newgodock/api/utils/formaterror"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,11 +19,23 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user := models.User{}
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
 	user.Prepare()
 	err = user.Validate("login")
 	if err != nil {
-		responses.ERROR(w, http.StatusUnprocessableEntity, formattedError)
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
+	}
+	token, err := server.SignIn(user.Email, user.Password)
+	if err != nil {
+		formattedError := formaterror.FormatError(err.Error())
+		responses.ERROR(w, http.StatusUnprocessableEntity, formattedError)
 	}
 	responses.JSON(w, http.StatusOK, token)
 }
